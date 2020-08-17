@@ -4,13 +4,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://x.klarnacdn.net/kp/lib/v1/api.js" async></script>
     <script src="/script.js" defer></script>
   </head>
 
   <body>
     <div>
-      <button id="klarna-pay-later-button">Pay With Klarna Pay Later</button>
-      <button id="klarna-pay-in-3-button">Pay With Klarna Pay In 3</button>
+      <button id="klarna-pay-later-redirect">
+        Pay With Klarna Pay Later Redirect
+      </button>
+      <button id="klarna-pay-in-3-redirect">
+        Pay With Klarna Pay In 3 Redirect
+      </button>
+      <button id="klarna-pay-later-widget">
+        Pay With Klarna Pay Later Widget
+      </button>
+      <button id="klarna-pay-in-3-widget">
+        Pay With Klarna Pay In 3 Widget
+      </button>
+      <div id="klarna-pay-later-container"></div>
+      <div id="klarna-pay-over-time-container"></div>
+
       <p style="color: red;" id="error"></p>
     </div>
   </body>

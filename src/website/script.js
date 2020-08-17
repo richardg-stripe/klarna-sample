@@ -80,23 +80,64 @@ const createKlarnaSource = () => {
   });
 };
 
+let globalKlarnaSource;
+
+const setupKlarnaWidgets = async () => {
+  globalKlarnaSource = await createKlarnaSource();
+  Klarna.Payments.init({
+    client_token: globalKlarnaSource.source.klarna.client_token,
+  });
+  Klarna.Payments.load({
+    container: "#klarna-pay-later-container",
+    payment_method_category: "pay_later",
+  });
+  Klarna.Payments.load({
+    container: "#klarna-pay-over-time-container",
+    payment_method_category: "pay_over_time",
+  });
+};
+
 const redirectToKlarnaMethod = (source, method) => {
   window.location.href = source.klarna[method];
 };
+const payWithKlarnaWidget = (source, method, container) => {
+  Klarna.Payments.authorize(
+    {
+      container: container,
+      payment_method_category: method,
+    },
+    (result) => {
+      console.log(result);
+      if (result.approved) {
+        window.location.href = `${window.location.href}?source=${source.id}&redirect_status=succeeded&client_secret=${source.client_secret}`;
+      }
+    }
+  );
+};
 
 document
-  .querySelector("button#klarna-pay-later-button")
+  .querySelector("button#klarna-pay-later-redirect")
   .addEventListener("click", async () => {
     const klarnaSource = await createKlarnaSource();
     console.log(klarnaSource);
     redirectToKlarnaMethod(klarnaSource.source, "pay_later_redirect_url");
   });
 document
-  .querySelector("button#klarna-pay-in-3-button")
+  .querySelector("button#klarna-pay-in-3-redirect")
   .addEventListener("click", async () => {
     const klarnaSource = await createKlarnaSource();
     console.log(klarnaSource);
     redirectToKlarnaMethod(klarnaSource.source, "pay_over_time_redirect_url");
+  });
+document
+  .querySelector("button#klarna-pay-later-widget")
+  .addEventListener("click", () => {
+    payWithKlarnaWidget(globalKlarnaSource.source, "pay_later");
+  });
+document
+  .querySelector("button#klarna-pay-in-3-widget")
+  .addEventListener("click", () => {
+    payWithKlarnaWidget(globalKlarnaSource.source, "pay_over_time");
   });
 
 const tryChargeSource = async () => {
@@ -118,5 +159,6 @@ const tryChargeSource = async () => {
 };
 
 (async () => {
+  setupKlarnaWidgets();
   await tryChargeSource();
 })();
