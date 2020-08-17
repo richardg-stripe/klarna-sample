@@ -1,0 +1,20 @@
+{
+  "name": "klarna-sample",
+  "version": "0.0.1",
+  "main": "server.js",
+  "scripts": {
+    "server": "node src/server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "lodash": "^4.17.15",
+    "moment": "^2.25.3",
+    "stripe": "^8.51.0",
+    "urijs": "^1.19.2"
+  },
+  "engines": {
+    "node": "12.x"
+  }
+}
