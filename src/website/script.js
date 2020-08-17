@@ -3,28 +3,6 @@ const PUBLIC_KEY =
   "pk_test_51HH3GjKy6MGWtC1Ifgn7eTxDep8ayZinPJSXASknWBWEVOZYlpHXWsQUbsheBlY6EtraMQlVDeNyowpXMWkpJ5Zr00PQnw7f2B";
 const stripe = window.Stripe(PUBLIC_KEY);
 
-const handlePaymentIntentResponse = async (response) => {
-  console.log("handlePIR", response);
-  if (response.error) {
-    displayError(response.error.message);
-  } else if (!response.nextAction) {
-    window.location.href = "/completed.html";
-  } else if (response.nextAction.type === "redirect_to_url") {
-    window.location.href = response.nextAction.redirect_to_url.url;
-  } else if (response.nextAction.type === "use_stripe_sdk") {
-    // See https://stripe.com/docs/payments/payment-intents/migration-synchronous
-    const confirmResponse = await stripe.confirmCardPayment(
-      response.clientSecret
-    );
-    if (confirmResponse.error) {
-      displayError(JSON.stringify(confirmResponse.error));
-    } else {
-      window.location.href = "/completed.html";
-    }
-    console.log("confirmResponse", confirmResponse);
-  }
-};
-
 const createPaymentIntent = async (source) => {
   const result = await fetch("/api/create-payment-intent", {
     method: "POST",
