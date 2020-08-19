@@ -1,31 +1,6 @@
-const REDIRECT_URL = `${window.location.origin}/completed.html`;
 const PUBLIC_KEY =
   "pk_test_51HH3GjKy6MGWtC1Ifgn7eTxDep8ayZinPJSXASknWBWEVOZYlpHXWsQUbsheBlY6EtraMQlVDeNyowpXMWkpJ5Zr00PQnw7f2B";
 const stripe = window.Stripe(PUBLIC_KEY);
-
-const createPaymentIntent = async (source) => {
-  const result = await fetch("/api/create-payment-intent", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      source,
-    }),
-  });
-  const response = await result.json();
-  console.log(response);
-  if (!result.ok) {
-    return {
-      error: response,
-    };
-  }
-
-  return {
-    ...response,
-    error: null,
-  };
-};
 
 const displayError = (error) => {
   document.querySelector("p#error").textContent = error;
