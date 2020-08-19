@@ -118,25 +118,31 @@ document
     payWithKlarnaWidget(globalKlarnaSource.source, "pay_over_time");
   });
 
-const tryChargeSource = async () => {
+const waitForSourceConsumed = async () => {
   const url = new URL(window.location.href);
   console.log(url);
+  const sourceId = url.searchParams.get("source");
+  const sourceClientSecret = url.searchParams.get("client_secret");
   if (
-    url.searchParams.get("source") &&
-    url.searchParams.get("client_secret") &&
+    sourceId &&
+    sourceClientSecret &&
     url.searchParams.get("redirect_status") === "succeeded"
   ) {
-    const { charge } = await createPaymentIntent(
-      url.searchParams.get("source")
-    );
-    console.log(charge);
-    if (charge.status === "succeeded") {
+    const source = await stripe.retrieveSource({
+      id: sourceId,
+      client_secret: sourceClientSecret,
+    });
+    if (source.source.status === "consumed") {
       window.location.href = "/success.html";
+    } else if (["failed", "cancelled"].includes(source.source.status)) {
+      console.error("Problem with your payment");
+    } else {
+      await waitForSourceConsumed();
     }
   }
 };
 
 (async () => {
   setupKlarnaWidgets();
-  await tryChargeSource();
+  await waitForSourceConsumed();
 })();
