@@ -11,7 +11,8 @@ app.use(bodyParser.json());
 const printResponse = (response) =>
   console.log(JSON.stringify(response, null, 2));
 
-// This could be done using webhooks
+// This could be done using webhooks for the event: source.chargable and source.failed
+// https://stripe.com/docs/api/events/types#event_types-source.chargeable
 const waitForChargableSource = async (sourceId) => {
   const source = await secretKeyStripe.sources.retrieve(sourceId);
   if (source.status !== "chargeable") {
