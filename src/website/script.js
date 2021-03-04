@@ -73,7 +73,7 @@ document
   .addEventListener("click", async () => {
     const klarnaSource = await createKlarnaSource();
     console.log(klarnaSource);
-    redirectToKlarnaMethod(klarnaSource.source, "pay_later_redirect_url");
+    // redirectToKlarnaMethod(klarnaSource.source, "pay_later_redirect_url");
   });
 document
   .querySelector("button#klarna-pay-in-3-redirect")

@@ -16,7 +16,10 @@ const waitForChargableSource = async (sourceId) => {
   return source;
 };
 
-const createPaymentIntent = (source) => {
+const createPaymentIntent = async (source) => {
+  const retrievedSource = await secretKeyStripe.sources.retrieve(source.id)
+  console.log('retrievedSource: ', retrievedSource)
+  await secretKeyStripe.sources.update(source.id, {amount: 9999})
   return secretKeyStripe.paymentIntents.create({
     amount: source.amount,
     currency: source.currency,
@@ -39,6 +42,7 @@ app.post(
     switch (event.type) {
       case "source.chargeable":
         console.log("source.chargable webhook fired!");
+        console.log(JSON.stringify(event, null, 2));
         const source = event.data.object;
         await createPaymentIntent(source);
         break;
